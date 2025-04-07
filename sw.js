@@ -1,7 +1,7 @@
 const CACHE_NAME = 'anwesenheit-app-v1';
 const urlsToCache = [
   '/',
-  '/index.html',
+  '/AAWAP/index.html',
   '/manifest.json',
   '/icon-192x192.png',
   '/icon-512x512.png'

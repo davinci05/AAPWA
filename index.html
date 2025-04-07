@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anwesenheit v2.1</title>
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="icon-192x192.png">
+    
+    <!-- Add base tag -->
+    <base href="/AAPWA/">
+    
+    <!-- Update paths to be absolute -->
+    <link rel="manifest" href="/AAPWA/manifest.json">
     <meta name="theme-color" content="#0072C6">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Anwesenheit">
+    <link rel="apple-touch-icon" href="/AAPWA/icon-192x192.png">
+    <link rel="apple-touch-startup-image" href="/AAPWA/icon-512x512.png">
     <style>
         body {
             font-family: 'Calibri', Arial, sans-serif;
@@ -132,13 +142,15 @@
     <script>
         // Check if the browser supports service workers for PWA
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('service-worker.js')
-                .then(registration => {
-                    console.log('Service Worker registered with scope:', registration.scope);
-                })
-                .catch(error => {
-                    console.log('Service Worker registration failed:', error);
-                });
+            navigator.serviceWorker.register('/AAPWA/service-worker.js', {
+                scope: '/AAPWA/'
+            })
+            .then(registration => {
+                console.log('Service Worker registered with scope:', registration.scope);
+            })
+            .catch(error => {
+                console.log('Service Worker registration failed:', error);
+            });
         }
 
         // Variables

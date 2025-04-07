@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Anwesenheit Check</title>
+    
+    <!-- PWA requirements -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Anwesenheit">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            padding: 20px;
+            max-width: 500px;
+            margin: 0 auto;
+            color: #333;
+        }
+        .header {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .info-card {
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .info-item {
+            margin-bottom: 8px;
+            display: flex;
+        }
+        .info-label {
+            font-weight: bold;
+            width: 100px;
+        }
+        .info-value {
+            flex: 1;
+        }
+        .confirmation {
+            margin: 25px 0;
+        }
+        #confirmCheck {
+            margin-right: 10px;
+            transform: scale(1.2);
+        }
+        #sendButton {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 20px;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #sendButton:disabled {
+            background-color: #cccccc;
+        }
+        .status {
+            text-align: center;
+            margin-top: 15px;
+            font-style: italic;
+            min-height: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">Anwesenheit Check-In</div>
+    
+    <div class="info-card">
+        <div class="info-item">
+            <span class="info-label">User:</span>
+            <span class="info-value" id="username">Loading...</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Hostname:</span>
+            <span class="info-value" id="hostname">Loading...</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">IP Address:</span>
+            <span class="info-value" id="ipaddress">Loading...</span>
+        </div>
+        <div class="info-item">
+            <span class="info-label">Timestamp:</span>
+            <span class="info-value" id="timestamp">Loading...</span>
+        </div>
+    </div>
+    
+    <div class="confirmation">
+        <label>
+            <input type="checkbox" id="confirmCheck"> 
+            Hiermit bestätige ich meine Anwesenheit und die 
+            Übermitlung der oben angezeigten Daten an meine Ausbilder u. FAWFIS@ford.com
+        </label>
+    </div>
+    
+    <button id="sendButton" disabled>Send Email</button>
+    
+    <div class="status" id="status"></div>
+
+    <script>
+        // Check if service worker is supported
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('Service Worker registered'))
+                .catch(err => console.log('Service Worker registration failed:', err));
+        }
+        
+        // Collection of data
+        const userData = {
+            username: '',
+            hostname: '',
+            ipAddress: '',
+            date: new Date().toLocaleDateString('de-DE'),
+            time: new Date().toLocaleTimeString('de-DE', {hour: '2-digit', minute:'2-digit'})
+        };
+
+        // Get device info
+        userData.username = localStorage.getItem('username');
+        // If username is not stored, prompt for it
+        if (!userData.username) {
+            userData.username = prompt('Please enter your username:', '');
+            if (userData.username) {
+                localStorage.setItem('username', userData.username);
+            }
+        }
+        
+        userData.hostname = navigator.platform + ' ' + 
+                            (navigator.userAgent.match(/iPhone|iPad|iPod|MacIntel/i) ? 'iOS' : 
+                             navigator.userAgent.match(/Android/i) ? 'Android' : 'Other');
+        
+        // Try to get IP address
+        fetch('https://api.ipify.org?format=json')
+            .then(response => response.json())
+            .then(data => {
+                userData.ipAddress = data.ip;
+                document.getElementById('ipaddress').textContent = userData.ipAddress;
+            })
+            .catch(error => {
+                document.getElementById('ipaddress').textContent = 'IP not available';
+            });
+
+        // Update the UI
+        document.getElementById('username').textContent = userData.username || 'Not set';
+        document.getElementById('hostname').textContent = userData.hostname;
+        document.getElementById('timestamp').textContent = 
+            userData.time + ' Uhr (CET) ' + userData.date;
+
+        // Generate verification code
+        function generateCode(userId, date) {
+            const year = date.getFullYear();
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const dayOfWeek = date.getDay();
+            
+            const input = `${year}${userId.toUpperCase()}${day}${month}`;
+            let result = '';
+            
+            for(let i = 0; i < input.length; i++) {
+                const charCode = input.charCodeAt(i) + dayOfWeek + 1;
+                result += String.fromCharCode(charCode);
+            }
+            
+            return result;
+        }
+
+        // Handle checkbox state
+        document.getElementById('confirmCheck').addEventListener('change', function(e) {
+            document.getElementById('sendButton').disabled = !this.checked;
+        });
+
+        // Handle send button
+        document.getElementById('sendButton').addEventListener('click', function() {
+            const statusEl = document.getElementById('status');
+            statusEl.textContent = 'Preparing email...';
+            
+            // Create email body
+            const body = `User:${userData.username}|Date:${userData.date}|Time:${userData.time}|IP:${userData.ipAddress}|Hostname:${userData.hostname}|Code:${generateCode(userData.username, new Date())}`;
+            
+            // Create mailto link (this works for iOS Mail)
+            const mailtoLink = `mailto:fawfis@ford.com;svogt@ford.com?subject=Anwesenheit-logging&body=${encodeURIComponent(body)}`;
+            
+            // Try specialized Outlook link
+            let outlookOpened = false;
+            
+            // For iOS, try both ms-outlook and default mailto
+            if (/iPhone|iPad|iPod|MacIntel/.test(navigator.userAgent) && window.webkit && window.webkit.messageHandlers) {
+                // Modern iOS approach with ms-outlook URL scheme
+                const outlookURL = `ms-outlook://compose?to=fawfis@ford.com;svogt@ford.com&subject=Anwesenheit-logging&body=${encodeURIComponent(body)}`;
+                
+                // For iOS, we need to use a hidden iframe to attempt opening Outlook
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+                
+                // Try opening Outlook app first
+                iframe.src = outlookURL;
+                
+                // Then fall back to default mail app after a short delay
+                setTimeout(function() {
+                    window.location.href = mailtoLink;
+                    statusEl.textContent = 'Email prepared. Please send it now.';
+                }, 500);
+            } else {
+                // For other platforms
+                window.location.href = mailtoLink;
+                statusEl.textContent = 'Email prepared. Please send it now.';
+            }
+        });
+    </script>
+</body>
+</html>

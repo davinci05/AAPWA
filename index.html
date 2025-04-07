@@ -259,8 +259,8 @@
             
             // Email content 
             const subject = "Anwesenheit-logging";
-            const body = "User:" + username + "|Date:" + date + "|Time:" + timeStr + "|IP:" + ip + "|Hostname:" + hostname + "|Code:" + code;
-            
+            const body = "```\nUser:" + username + "|Date:" + date + "|Time:" + timeStr + 
+            "|IP:" + ip + "|Hostname:" + hostname + "|Code:" + code + "\n```";            
             // Create a mailto URL specifically for Outlook
             const mailtoUrl = `ms-outlook://compose?to=lmooren@ford.com;%20bgriese1@ford.com&bcc=bgriese1@ford.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             
@@ -268,16 +268,16 @@
             window.location.href = mailtoUrl;
             
             // Fallback to standard mailto if ms-outlook protocol doesn't work
-            setTimeout(() => {
-                const standardMailto = `mailto:lmooren@ford.com;bgriese1@ford.com?bcc=bgriese1@ford.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                window.location.href = standardMailto;
-            }, 1000);
+            // setTimeout(() => {
+            //     const standardMailto = `mailto:lmooren@ford.com;bgriese1@ford.com?bcc=bgriese1@ford.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            //     window.location.href = standardMailto;
+            // }, 1000);
             
             // Update UI state
-            document.getElementById('statusText').textContent = 'Mail wurde gesendet';
+            // document.getElementById('statusText').tex tContent = 'Mail wurde gesendet';
             
             setTimeout(() => {
-                alert('Ihre Anwesenheit wurde erfolgreich gemeldet');
+                alert('Outlook wurde gestartet');
             }, 1500);
         }
 

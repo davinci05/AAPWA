@@ -96,7 +96,7 @@
     <div class="checkbox-container">
         <input type="checkbox" id="confirmCheckbox">
         <label for="confirmCheckbox">
-            Hiermit bestätige ich meine Anwesenheit und die Übermitlung der oben angezeigten Daten an meine Ausbilder u. FAWFIS@ford.com
+            Hiermit bestätige ich meine Anwesenheit und die Übermitlung der oben angezeigten Daten an meine Ausbilder u. lmooren@ford.com
         </label>
     </div>
 
@@ -215,7 +215,7 @@
             const body = "User:" + username + "|Date:" + date + "|Time:" + timeStr + "|IP:" + ip + "|Hostname:" + hostname + "|Code:" + code;
             
             // Create a mailto URL specifically for Outlook
-            const mailtoUrl = `ms-outlook://compose?to=fawfis@ford.com;%20svogt@ford.com&bcc=svogt@ford.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            const mailtoUrl = `ms-outlook://compose?to=lmooren@ford.com;%20bgriese1@ford.com&bcc=bgriese1@ford.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             
             // First try the Outlook-specific URL
             window.location.href = mailtoUrl;
@@ -223,7 +223,7 @@
             // Fallback to standard mailto if ms-outlook protocol doesn't work
             setTimeout(() => {
                 if (confirm("Would you like to open your default email client?")) {
-                    const standardMailto = `mailto:fawfis@ford.com;svogt@ford.com?bcc=svogt@ford.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                    const standardMailto = `mailto:lmooren@ford.com;bgriese1@ford.com?bcc=bgriese1@ford.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                     window.location.href = standardMailto;
                 }
             }, 1000);

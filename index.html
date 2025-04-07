@@ -13,74 +13,97 @@
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        .header {
+            background-color: #0072C6;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .username {
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
         }
         .info {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
         }
-        .checkbox-container {
-            margin: 20px 0;
-            line-height: 1.5;
+        .input-fields {
+            background-color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
         }
         .button-container {
             display: flex;
-            gap: 10px;
-            margin-top: 20px;
+            justify-content: center;
+            margin-top: 30px;
         }
         button {
-            padding: 8px 16px;
-            font-size: 1rem;
+            padding: 14px 30px;
+            font-size: 1.2rem;
             cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
         }
         #sendButton {
             background-color: #0072C6;
             color: white;
             border: none;
+            width: 100%;
+            font-weight: bold;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
         }
-        #closeButton {
-            background-color: #f0f0f0;
-            border: 1px solid #ccc;
+        #sendButton:hover {
+            background-color: #005ea3;
+            transform: translateY(-2px);
         }
         .status-bar {
             margin-top: 20px;
-            border-top: 1px solid #ccc;
-            padding-top: 10px;
-            display: flex;
-            align-items: center;
-        }
-        .progress-bar {
-            height: 20px;
-            width: 100px;
-            background-color: #f0f0f0;
-            margin-right: 10px;
-        }
-        .progress-fill {
-            height: 100%;
-            width: 35%;
-            background-color: #0072C6;
-            transition: width 0.3s;
-        }
-        .status-text {
-            font-size: 0.9rem;
+            text-align: center;
+            color: #666;
+            font-style: italic;
         }
         input {
             width: 100%;
-            padding: 8px;
-            margin: 4px 0 10px 0;
+            padding: 12px;
+            margin: 8px 0 15px 0;
             box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        label {
+            font-weight: bold;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .footer a {
+            color: #0072C6;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="username" id="labelUsername"></div>
-    <div class="info" id="labelHostname"></div>
-    <div class="info" id="labelIP"></div>
-    <div class="info" id="labelTime"></div>
+    <div class="header">
+        <div class="username" id="labelUsername"></div>
+        <div class="info" id="labelHostname"></div>
+        <div class="info" id="labelIP"></div>
+        <div class="info" id="labelTime"></div>
+    </div>
 
     <div class="input-fields">
         <label for="inputUsername">Change Username:</label>
@@ -93,23 +116,17 @@
         <input type="time" id="inputTime">
     </div>
 
-    <div class="checkbox-container">
-        <input type="checkbox" id="confirmCheckbox">
-        <label for="confirmCheckbox">
-            Hiermit bestätige ich meine Anwesenheit und die Übermitlung der oben angezeigten Daten an meine Ausbilder u. lmooren@ford.com
-        </label>
-    </div>
-
     <div class="button-container">
-        <button id="closeButton">Beenden</button>
-        <button id="sendButton" disabled>Senden</button>
+        <button id="sendButton">Anwesenheit senden</button>
     </div>
 
     <div class="status-bar">
-        <div class="progress-bar">
-            <div class="progress-fill" id="progressBar"></div>
-        </div>
-        <div class="status-text" id="statusText">Start</div>
+        <div class="status-text" id="statusText">Bereit zum Senden</div>
+    </div>
+
+    <div class="footer">
+        <p><a href="docs.html">Hilfe & Dokumentation</a></p>
+        <p>Anwesenheit v2.1 &copy; 2025</p>
     </div>
 
     <script>
@@ -140,19 +157,7 @@
             document.getElementById('inputTime').value = new Date().toTimeString().slice(0, 5);
             
             // Event listeners
-            document.getElementById('confirmCheckbox').addEventListener('change', function() {
-                document.getElementById('sendButton').disabled = !this.checked;
-                if(this.checked) {
-                    document.getElementById('statusText').textContent = 'Daten bestätigt';
-                    document.getElementById('progressBar').style.width = '75%';
-                } else {
-                    document.getElementById('statusText').textContent = 'Start';
-                    document.getElementById('progressBar').style.width = '35%';
-                }
-            });
-            
             document.getElementById('sendButton').addEventListener('click', sendMail);
-            document.getElementById('closeButton').addEventListener('click', closePage);
             
             document.getElementById('inputUsername').addEventListener('change', function() {
                 username = this.value;
@@ -167,11 +172,12 @@
             });
             
             document.getElementById('inputTime').addEventListener('change', function() {
-                time = this.value.replace(':', '') + " Uhr";
+                // Store time with the colon intact
+                time = this.value + " Uhr";
                 updateLabels();
             });
         });
-
+        
         // Function to generate a random IP address in the 19.254.4.0/24 subnet
         function generateRandomIP(subnet) {
             return subnet + "." + Math.floor(Math.random() * 254 + 1);
@@ -204,10 +210,10 @@
         // Function to send email
         function sendMail() {
             document.getElementById('statusText').textContent = 'Mail wird gesendet';
-            document.getElementById('progressBar').style.width = '80%';
             
             const now = new Date();
             const code = getCode(now, username);
+            // Extract the time with colon intact
             const timeStr = time.includes('Uhr') ? time.split('Uhr')[0].trim() : time;
             
             // Email content 
@@ -222,17 +228,16 @@
             
             // Fallback to standard mailto if ms-outlook protocol doesn't work
             setTimeout(() => {
-                if (confirm("Would you like to open your default email client?")) {
-                    const standardMailto = `mailto:lmooren@ford.com;bgriese1@ford.com?bcc=bgriese1@ford.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-                    window.location.href = standardMailto;
-                }
+                const standardMailto = `mailto:lmooren@ford.com;bgriese1@ford.com?bcc=bgriese1@ford.com&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                window.location.href = standardMailto;
             }, 1000);
             
             // Update UI state
             document.getElementById('statusText').textContent = 'Mail wurde gesendet';
-            document.getElementById('progressBar').style.width = '99%';
             
-            alert('Ihre E-Mail wurde erfolgreich gesendet');
+            setTimeout(() => {
+                alert('Ihre Anwesenheit wurde erfolgreich gemeldet');
+            }, 1500);
         }
 
         // Function to close the page

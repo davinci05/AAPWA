@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anwesenheit v2.1 - Dokumentation</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
+    <meta name="theme-color" content="#0072C6">
+    <style>
+        body {
+            font-family: 'Calibri', Arial, sans-serif;
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.5;
+        }
+        .header {
+            background-color: #0072C6;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .title {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h2 {
+            border-bottom: 2px solid #0072C6;
+            padding-bottom: 5px;
+            color: #0072C6;
+        }
+        h3 {
+            color: #444;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        .code {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: Consolas, monospace;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        img {
+            max-width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .back-button {
+            padding: 14px 30px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background-color: #0072C6;
+            color: white;
+            border: none;
+            font-weight: bold;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+            text-decoration: none;
+            display: inline-block;
+        }
+        .back-button:hover {
+            background-color: #005ea3;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">Anwesenheit v2.1 - Dokumentation</div>
+        <div class="subtitle">Nutzungshinweise für die Anwesenheitserfassung</div>
+    </div>
+
+    <div class="section">
+        <h2>Übersicht</h2>
+        <p>Die Anwesenheits-App dient dazu, auf einfache Weise eine Anwesenheitsmeldung per E-Mail zu versenden. 
+        Die Anwendung läuft direkt im Browser und kann auch als Progressive Web App (PWA) auf dem Homescreen installiert werden.</p>
+        
+        <p>Wichtige Funktionen:</p>
+        <ul>
+            <li>Anwesenheit per E-Mail senden</li>
+            <li>Benutzername und Hostname anpassen</li>
+            <li>Zeitauswahl manuell verändern</li>
+            <li>Verschlüsselter Verifizierungscode wird automatisch generiert</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Nutzung der App</h2>
+
+        <h3>Grundlegende Bedienung</h3>
+        <ol>
+            <li>Geben Sie Ihren <strong>Benutzernamen</strong> ein oder lassen Sie den voreingestellten Wert</li>
+            <li>Ändern Sie den <strong>Hostname</strong> nach Bedarf</li>
+            <li>Passen Sie die <strong>Uhrzeit</strong> an (standardmäßig ist die aktuelle Zeit eingestellt)</li>
+            <li>Klicken Sie auf <strong>"Anwesenheit senden"</strong>, um die E-Mail zu erstellen</li>
+            <li>Die E-Mail öffnet sich automatisch in Ihrem Standard-E-Mail-Programm</li>
+            <li>Senden Sie die E-Mail ohne zusätzliche Änderungen ab</li>
+        </ol>
+
+        <h3>Übersicht der angezeigten Informationen</h3>
+        <ul>
+            <li><strong>Username:</strong> Ihr Benutzername</li>
+            <li><strong>Hostname:</strong> Name des Computers/Geräts</li>
+            <li><strong>IP-Adresse:</strong> Eine generierte IP (19.254.4.x)</li>
+            <li><strong>Zeitstempel:</strong> Datum und Uhrzeit</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>Windows Benutzername und Hostnamen finden</h2>
+        
+        <p>Um Ihren Windows Benutzernamen und Hostnamen zu finden, befolgen Sie diese Schritte:</p>
+        
+        <h3>Option 1: Über die Befehlszeile</h3>
+        <ol>
+            <li>Drücken Sie <strong>Windows-Taste + R</strong>, geben Sie <strong>cmd</strong> ein und drücken Sie Enter</li>
+            <li>Im Eingabeaufforderungsfenster geben Sie den folgenden Befehl ein:</li>
+        </ol>
+        <div class="code">echo %USERNAME%@%COMPUTERNAME%</div>
+        <p>Dies zeigt Ihren Benutzernamen und Computernamen im Format <code>benutzername@computername</code> an.</p>
+        
+        <h3>Option 2: Über die Systemeinstellungen</h3>
+        <ol>
+            <li>Klicken Sie auf <strong>Start</strong> > <strong>Einstellungen</strong> > <strong>System</strong> > <strong>Über</strong></li>
+            <li>Hier finden Sie den Gerätenamen (Hostnamen) sowie Informationen zu Ihrem Konto</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Outlook Signatur entfernen</h2>
+        
+        <h3>Auf dem Computer (Windows/Mac)</h3>
+        <ol>
+            <li>Öffnen Sie Outlook</li>
+            <li>Klicken Sie auf <strong>Datei</strong> > <strong>Optionen</strong> > <strong>E-Mail</strong> > <strong>Signaturen</strong></li>
+            <li>Hier können Sie alle vorhandenen Signaturen bearbeiten oder löschen</li>
+            <li>Entfernen oder deaktivieren Sie die automatische Signatur für neue Nachrichten</li>
+        </ol>
+
+        <h3>Auf dem iPhone/iPad</h3>
+        <ol>
+            <li>Öffnen Sie die <strong>Einstellungen</strong> App</li>
+            <li>Scrollen Sie nach unten und tippen Sie auf <strong>Mail</strong></li>
+            <li>Tippen Sie auf <strong>Signatur</strong></li>
+            <li>Löschen Sie den Text "Gesendet von meinem iPhone" oder andere vorhandene Signaturen</li>
+        </ol>
+
+        <h3>In der Outlook App (Android/iOS)</h3>
+        <ol>
+            <li>Öffnen Sie die Outlook App</li>
+            <li>Tippen Sie auf Ihr <strong>Profilbild</strong> oder <strong>Initialen</strong> oben links</li>
+            <li>Tippen Sie auf das <strong>Zahnrad-Symbol</strong> für Einstellungen</li>
+            <li>Scrollen Sie nach unten zu <strong>E-Mail</strong> und tippen Sie auf <strong>Signatur</strong></li>
+            <li>Löschen oder ändern Sie die Signatur nach Bedarf</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>Hilfe & Support</h2>
+        <p>Bei Problemen oder Fragen zur Anwendung wenden Sie sich bitte an Ihren Administrator oder an die im Footer angegebenen Kontakte.</p>
+    </div>
+
+    <div class="button-container">
+        <a href="index.html" class="back-button">Zurück zur App</a>
+    </div>
+</body>
+</html>

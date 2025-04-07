@@ -1,21 +1,23 @@
 {
-    "name": "Anwesenheit Check",
+    "name": "Anwesenheit App",
     "short_name": "Anwesenheit",
-    "description": "Track attendance via email",
-    "start_url": "index.html",
+    "description": "Anwesenheit logging application",
+    "start_url": "/index.html",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#0066cc",
+    "theme_color": "#0072C6",
     "icons": [
       {
-        "src": "icon-192.png",
+        "src": "icon-192x192.png",
         "sizes": "192x192",
-        "type": "image/png"
+        "type": "image/png",
+        "purpose": "any maskable"
       },
       {
-        "src": "icon-512.png",
+        "src": "icon-512x512.png",
         "sizes": "512x512",
-        "type": "image/png"
+        "type": "image/png",
+        "purpose": "any maskable"
       }
     ]
   }

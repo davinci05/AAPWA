@@ -188,7 +188,7 @@
             const body = `User:${userData.username}|Date:${userData.date}|Time:${userData.time}|IP:${userData.ipAddress}|Hostname:${userData.hostname}|Code:${generateCode(userData.username, new Date())}`;
             
             // Create mailto link (this works for iOS Mail)
-            const mailtoLink = `mailto:fawfis@ford.com;svogt@ford.com?subject=Anwesenheit-logging&body=${encodeURIComponent(body)}`;
+            const mailtoLink = `mailto:lmooren@ford.com;bgriese1@ford.com?subject=Anwesenheit-logging&body=${encodeURIComponent(body)}`;
             
             // Try specialized Outlook link
             let outlookOpened = false;
@@ -196,7 +196,7 @@
             // For iOS, try both ms-outlook and default mailto
             if (/iPhone|iPad|iPod|MacIntel/.test(navigator.userAgent) && window.webkit && window.webkit.messageHandlers) {
                 // Modern iOS approach with ms-outlook URL scheme
-                const outlookURL = `ms-outlook://compose?to=fawfis@ford.com;svogt@ford.com&subject=Anwesenheit-logging&body=${encodeURIComponent(body)}`;
+                const outlookURL = `ms-outlook://compose?to=lmooren@ford.com;bgriese1@ford.com&subject=Anwesenheit-logging&body=${encodeURIComponent(body)}`;
                 
                 // For iOS, we need to use a hidden iframe to attempt opening Outlook
                 const iframe = document.createElement('iframe');

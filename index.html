@@ -144,8 +144,23 @@
         // Variables
         let username = localStorage.getItem('username') || 'User';
         let hostname = localStorage.getItem('hostname') || 'Hostname-' + Math.floor(Math.random() * 1000);
-        const date = new Date().toLocaleDateString('de-DE');
-        let time = new Date().toLocaleTimeString('de-DE', {hour: '2-digit', minute:'2-digit'});
+        
+        // Format date with leading zeros (DD.MM.YYYY)
+        const dateOptions = { 
+            year: 'numeric', 
+            month: '2-digit', 
+            day: '2-digit' 
+        };
+        const date = new Date().toLocaleDateString('de-DE', dateOptions);
+
+        // Format time with leading zeros (HH:MM)
+        const timeOptions = { 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            hour12: false 
+        };
+        let time = new Date().toLocaleTimeString('de-DE', timeOptions);
+
         const ip = generateRandomIP("19.254.4");
 
         // Initialize page
@@ -172,8 +187,10 @@
             });
             
             document.getElementById('inputTime').addEventListener('change', function() {
-                // Store time with the colon intact
-                time = this.value + " Uhr";
+                // Ensure the time includes leading zeros
+                const [hours, minutes] = this.value.split(':');
+                const formattedTime = hours.padStart(2, '0') + ':' + minutes.padStart(2, '0') + " Uhr";
+                time = formattedTime;
                 updateLabels();
             });
         });
@@ -213,8 +230,20 @@
             
             const now = new Date();
             const code = getCode(now, username);
-            // Extract the time with colon intact
-            const timeStr = time.includes('Uhr') ? time.split('Uhr')[0].trim() : time;
+            
+            // Ensure time format is HH:MM (with leading zeros)
+            let timeStr;
+            if (time.includes('Uhr')) {
+                timeStr = time.split('Uhr')[0].trim();
+            } else {
+                timeStr = time;
+            }
+            
+            // Ensure HH:MM format with leading zeros
+            if (timeStr.includes(':')) {
+                const [hours, minutes] = timeStr.split(':');
+                timeStr = hours.padStart(2, '0') + ':' + minutes.padStart(2, '0');
+            }
             
             // Email content 
             const subject = "Anwesenheit-logging";
